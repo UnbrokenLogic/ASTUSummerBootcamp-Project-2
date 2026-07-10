@@ -1,7 +1,7 @@
 // TO-DO LIST (TASK ONLY)
 
 // Array to store tasks
-let tasks = [];
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
 // Elements
 const taskInput = document.getElementById("taskInput");
@@ -9,9 +9,11 @@ const addBtn = document.getElementById("addBtn");
 const taskList = document.getElementById("taskList");
 const errorMsg = document.getElementById("errorMsg");
 const remainingCount = document.getElementById("remainingCount");
+const clearBtn = document.getElementById("clearBtn");
 
 // Add button
 addBtn.addEventListener("click", addTask);
+clearBtn.addEventListener("click", clearAllTasks);
 
 // Add a new task
 function addTask() {
@@ -29,9 +31,25 @@ function addTask() {
         done: false
     });
 
+    saveTasks();
+
     taskInput.value = "";
 
     renderTasks();
+}
+
+function saveTasks() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function clearAllTasks() {
+
+    tasks = [];
+
+    saveTasks();
+
+    renderTasks();
+
 }
 
 // Show tasks on the page
@@ -58,6 +76,7 @@ function renderTasks() {
 
         doneBtn.addEventListener("click", function () {
             tasks[i].done = !tasks[i].done;
+            saveTasks();
             renderTasks();
         });
 
@@ -67,6 +86,7 @@ function renderTasks() {
 
         deleteBtn.addEventListener("click", function () {
             tasks.splice(i, 1);
+            saveTasks();
             renderTasks();
         });
 
@@ -89,3 +109,4 @@ function updateCounter() {
 
     remainingCount.textContent = remaining.length;
 }
+renderTasks();
